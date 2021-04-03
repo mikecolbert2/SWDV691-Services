@@ -1,0 +1,22 @@
+{
+  "name": "time-detective-server",
+  "version": "0.0.1",
+  "description": "Time Detective API Server",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "body-parser": "1.18.3",
+    "cors": "2.8.4",
+    "dotenv": "^8.2.0",
+    "express": "4.16.3",
+    "method-override": "2.3.10",
+    "morgan": "1.9.0",
+    "pg": "^8.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}

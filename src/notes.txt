@@ -1,0 +1,4 @@
+ heroku pg:info -a swdv691-services
+ PG 13.2
+
+ 

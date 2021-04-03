@@ -1,0 +1,134 @@
+DROP DATABASE IF EXISTS time_detective;
+CREATE DATABASE time_detective;
+
+DROP TABLE IF EXISTS roles;
+CREATE TABLE roles
+(
+role_id INT GENERATED ALWAYS AS IDENTITY,
+role_name VARCHAR(50) UNIQUE,
+PRIMARY KEY(role_id)
+);
+
+INSERT INTO roles (role_name) VALUES ('user');
+INSERT INTO roles (role_name) VALUES ('admin');
+
+SELECT * FROM roles;
+
+// user is 1
+// admin is 2
+
+
+DROP TABLE IF EXISTS users;
+CREATE TABLE users
+(
+user_id INT GENERATED ALWAYS AS IDENTITY,
+first_name VARCHAR(50) NOT NULL,
+last_name VARCHAR(50) NOT NULL,
+email VARCHAR(200) UNIQUE NOT NULL,
+password VARCHAR(200) NOT NULL,
+role_id INT NOT NULL,
+date_created TIMESTAMP NOT NULL,
+last_login TIMESTAMP,
+PRIMARY KEY(user_id),
+CONSTRAINT fk_role
+      FOREIGN KEY(role_id) 
+	  REFERENCES roles(role_id)
+	  ON DELETE SET NULL
+
+);
+
+INSERT INTO users (first_name, last_name, email, password, role_id, date_created, last_login) 
+VALUES ('Mike', 'Colbert', 'mike@mike.com', 'abc123', 2, current_timestamp, current_timestamp);
+
+INSERT INTO users (first_name, last_name, email, password, role_id, date_created, last_login) 
+VALUES ('Amy', 'Colbert', 'amy@amy.com', 'abc123', 1, current_timestamp, current_timestamp);
+
+SELECT * FROM users;
+
+
+// test on delete if I delete a role - it should set the role_id column to null.
+
+
+
+DROP TABLE IF EXISTS tasks;
+CREATE TABLE tasks
+(
+task_id INT GENERATED ALWAYS AS IDENTITY,
+task_name VARCHAR(50) NOT NULL,
+user_id INT NOT NULL,
+date_created TIMESTAMP NOT NULL,
+PRIMARY KEY(task_id),
+CONSTRAINT fk_user
+      FOREIGN KEY(user_id) 
+	  REFERENCES users(user_id)
+	  ON DELETE CASCADE
+);
+
+INSERT INTO tasks (task_name, user_id, date_created)
+VALUES ('Email', 1 , current_timestamp);
+
+INSERT INTO tasks (task_name, user_id, date_created)
+VALUES ('Meetings', 2 , current_timestamp);
+
+SELECT * FROM tasks;
+
+
+// test on delete if I delete a user - it should delete tasks associated with that users.
+// build join query to show all tasks for a user
+
+
+DROP TABLE IF EXISTS task_log;
+CREATE TABLE task_log
+(
+log_id INT GENERATED ALWAYS AS IDENTITY,
+task_id INT NOT NULL,
+start_time TIMESTAMP NOT NULL,
+end_time TIMESTAMP,
+total_time TIME,
+PRIMARY KEY(log_id),
+CONSTRAINT fk_tasks
+      FOREIGN KEY(task_id) 
+	  REFERENCES tasks(task_id)
+	  ON DELETE CASCADE
+);
+
+
+INSERT INTO task_log (task_id, start_time)
+VALUES (1, current_timestamp);
+
+UPDATE task_log
+SET end_time = current_timestamp + INTERVAL '10 min'
+WHERE log_id = 1
+;
+
+INSERT INTO task_log (task_id, start_time)
+VALUES (2, current_timestamp);
+
+
+UPDATE task_log
+SET end_time = current_timestamp, total_time = (end_time::TIME - start_time::TIME)
+WHERE log_id = 1;
+
+
+SELECT * FROM task_log;
+
+
+// test on delete if I delete a task - it should delete task_log entries associated with that task.
+// build join query to show all task_log entries for a task
+// build join query to show all task_log entries for a user
+
+
+
+
+SELECT task_log.logID, users.email, tasks.task_name 
+FROM task_log
+INNER JOIN users ON task_log.userID = users.userID
+INNER JOIN tasks ON task_log.taskID = tasks.taskID;
+
+
+
+
+
+
+
+
