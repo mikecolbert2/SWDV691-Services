@@ -1,6 +1,14 @@
 DROP DATABASE IF EXISTS time_detective;
 CREATE DATABASE time_detective;
 
+
+// -- Do not have permissions to create a new user on Heroku -- //
+// CREATE USER timedet_app WITH ENCRYPTED PASSWORD 'pcOLdD]tMeN#A{KOZDx!A4lIb}UY78';
+// GRANT CONNECT ON DATABASE dde0r75jqai4n4 TO timedet_app;
+// GRANT SELECT, CREATE, DELETE, UPDATE ON SCHEMA public TO timedet_app;
+//-------------------------------------------------------------//
+
+
 DROP TABLE IF EXISTS roles;
 CREATE TABLE roles
 (
