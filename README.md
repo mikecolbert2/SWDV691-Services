@@ -1,4 +1,6 @@
 # Time Detective - Backend Services
+### Express based REST API server for serving PostgreSQL content.
+
 ![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)
 ![Express.js](https://img.shields.io/badge/Express.js-404D59?style=flat&logo=express&logoColor=white)
 ![PostgreSQL](	https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
@@ -16,3 +18,10 @@ This backend service application is dependent on PostgreSQL and requires users a
 
 This repository is the backend service layer of the application. It requires the front-end user interface at [SWDV619 - UI](https://github.com/mikecolbert2/SWDV691-UI) to be installed and running to interact with the applicatiton.
 
+### Steps to run this code
+
+1. Run `npm install` to install all required modules
+2. Run `npm start` to start the server
+3. If everything went right, you should see a message saying that the server was started and listenig on some port...
+
+#### Useful Links
