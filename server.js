@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 const cors = require('cors');
 
-const db = require('./queries')
+const db = require('./db.js')
 
 app.use(bodyParser.urlencoded({'extended': 'true'}));
 app.use(bodyParser.json());
@@ -26,12 +26,15 @@ app.get('/', (request, response) => {
     response.json({ info: 'Node.js, Express, and Postgres API server' })
   })
 
-
 // ** TEST **
 // Get all 
 app.get('/api/items', db.getAllItems)
 
 
+// ** Users ** //
+// create a new user
+app.post('/api/user', db.createUser)
+//app.post('/user', db.createUser)
 
 
 // ** ADMIN ** //
