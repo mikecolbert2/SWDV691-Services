@@ -59,7 +59,7 @@ const getAllItems = (request, response) => {
 
 const getAllUsers = (request, response) => {
   pool.query(
-    `SELECT users.user_id::varchar, users.first_name, users.last_name, users.email, users.password, 
+    `SELECT users.user_id, users.first_name, users.last_name, users.email, users.password, 
                 roles.role_name, users.date_created, users.last_login 
                 FROM users 
                 INNER JOIN roles ON users.role_id = roles.role_id
