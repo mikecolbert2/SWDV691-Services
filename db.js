@@ -13,6 +13,12 @@ const pool = new Pool({
   ssl: { rejectUnauthorized: false },
 });
 
+// TODO: need to add validation for
+// empty fields
+// password too short
+// password and password2 don't match
+// email has already been registered
+
 // ** Accounts & Authentication ** //
 
 const createUser = (req, res) => {
@@ -57,6 +63,7 @@ const getAllUsers = (request, response) => {
                 roles.role_name, users.date_created, users.last_login 
                 FROM users 
                 INNER JOIN roles ON users.role_id = roles.role_id 
+                CAST (users.user_id AS VARCHAR(100))
                 ORDER BY users.last_name ASC, users.first_name ASC;`,
     (error, results) => {
       if (error) {
