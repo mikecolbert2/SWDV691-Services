@@ -30,7 +30,7 @@ app.get("/", (request, response) => {
 });
 
 // ** Users ** //
-app.post("/api/users/register", db.registerUser);
+app.post("/api/user/register", db.registerUser);
 
 // ** TEST **
 // Get all
