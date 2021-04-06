@@ -21,7 +21,7 @@ const pool = new Pool({
 
 // ** Accounts & Authentication ** //
 
-const createUser = (req, res) => {
+const registerUser = (req, res) => {
   let { first_name, last_name, email, password, password2 } = req.body;
   let errors = [];
 
@@ -76,5 +76,5 @@ const getAllUsers = (request, response) => {
 module.exports = {
   getAllItems,
   getAllUsers,
-  createUser,
+  registerUser,
 };

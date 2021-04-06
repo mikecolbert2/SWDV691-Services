@@ -29,6 +29,9 @@ app.get("/", (request, response) => {
   response.json({ info: "Node.js, Express, and Postgres API server" });
 });
 
+// ** Users ** //
+app.post("/api/users/register", db.registerUser);
+
 // ** TEST **
 // Get all
 app.get("/api/items", db.getAllItems);
