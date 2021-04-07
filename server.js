@@ -30,16 +30,22 @@ app.get("/", (request, response) => {
 });
 
 // ** Users ** //
-app.post("/api/user/register", db.registerUser);
+// get one user
+//app.get("/api/user/:id", db.getOneUser);
+
+// create new user
+app.post("/api/user", db.createUser);
+
+// delete existing user
+app.delete("/api/user/:id", db.deleteUser);
+
+// ** ADMIN ** //
+// get all users
+app.get("/api/admin/users", db.getAllUsers);
 
 // ** TEST **
 // Get all
-app.get("/api/items", db.getAllItems);
-
-// ** ADMIN ** //
-
-// get all users
-app.get("/api/admin/users", db.getAllUsers);
+// app.get("/api/items", db.getAllItems);
 
 // Start app and listen on port 8080
 const PORT = process.env.PORT || 5000;
