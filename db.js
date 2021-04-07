@@ -21,7 +21,28 @@ const pool = new Pool({
 
 // ** Accounts & Authentication ** //
 
-const registerUser = (req, res) => {
+// delete a user
+const deleteUser = (req, res) => {
+  console.log("inside delete user");
+  const user_id = req.params.id;
+  let erorrs = [];
+  console.log("deleting user: " + user_id);
+
+  pool.query(
+    `DELETE FROM users WHERE users.user_id = $1::uuid`,
+    [user_id],
+    (err, results) => {
+      if (err) {
+        throw err;
+      }
+      //console.log(results.rows);
+      res.status(201).json({ message: `successfully deleted user` });
+    }
+  );
+};
+
+// create a new user
+const createUser = (req, res) => {
   let { first_name, last_name, email, password, password2 } = req.body;
   let errors = [];
 
@@ -37,26 +58,28 @@ const registerUser = (req, res) => {
             throw err;
           }
           console.log(results.rows);
-          res.status(201).json(results.rows);
+          //res.status(201).json(results.rows);
+          res
+            .status(201)
+            .json({ message: `successfully registered ${results.rows}` });
         }
       );
-      //res.status(201).json(results.rows);
-      //res.status(201).json({message: `successfully registered ${results.rows}`})
     });
   });
 };
 
-const getAllItems = (request, response) => {
-  pool.query(`SELECT * FROM items ORDER BY item_name ASC`, (error, results) => {
-    if (error) {
-      throw error;
-    }
-    response.status(200).json(results.rows);
-  });
-};
+// const getAllItems = (request, response) => {
+//   pool.query(`SELECT * FROM items ORDER BY item_name ASC`, (error, results) => {
+//     if (error) {
+//       throw error;
+//     }
+//     response.status(200).json(results.rows);
+//   });
+// };
 
 // ** Admin ** //
 
+// return a list of all users
 const getAllUsers = (request, response) => {
   pool.query(
     `SELECT users.user_id, users.first_name, users.last_name, users.email, users.password, 
@@ -74,7 +97,8 @@ const getAllUsers = (request, response) => {
 };
 
 module.exports = {
-  getAllItems,
+  //  getAllItems,
   getAllUsers,
-  registerUser,
+  createUser,
+  deleteUser,
 };
