@@ -39,6 +39,9 @@ app.post("/api/user", db.createUser);
 // delete existing user
 app.delete("/api/user/:id", db.deleteUser);
 
+// get one user
+app.get("/api/user/:id", db.getUser);
+
 // ** ADMIN ** //
 // get all users
 app.get("/api/admin/users", db.getAllUsers);

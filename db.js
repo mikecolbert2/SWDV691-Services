@@ -96,9 +96,30 @@ const getAllUsers = (request, response) => {
   );
 };
 
+// return one user
+const getUser = (req, res) => {
+  const user_id = req.params.id;
+  pool.query(
+    `SELECT users.user_id, users.first_name, users.last_name, users.email, users.password, 
+                roles.role_name, users.date_created, users.last_login 
+                FROM users 
+                INNER JOIN roles ON users.role_id = roles.role_id
+                ORDER BY users.last_name ASC, users.first_name ASC
+                WHERE users.user_id = $1::uuid;`,
+    [user_id],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).json(results.rows);
+    }
+  );
+};
+
 module.exports = {
   //  getAllItems,
   getAllUsers,
   createUser,
   deleteUser,
+  getUser,
 };
