@@ -80,7 +80,7 @@ const createUser = (req, res) => {
 // ** Admin ** //
 
 // return a list of all users
-const getAllUsers = (request, response) => {
+const getAllUsers = (req, res) => {
   pool.query(
     `SELECT users.user_id, users.first_name, users.last_name, users.email, users.password, 
                 roles.role_name, users.date_created, users.last_login 
@@ -91,7 +91,7 @@ const getAllUsers = (request, response) => {
       if (error) {
         throw error;
       }
-      response.status(200).json(results.rows);
+      res.status(200).json(results.rows);
     }
   );
 };
@@ -99,19 +99,19 @@ const getAllUsers = (request, response) => {
 // return one user
 const getUser = (req, res) => {
   const user_id = req.params.id;
+  console.log(user_id);
   pool.query(
     `SELECT users.user_id, users.first_name, users.last_name, users.email, users.password, 
                 roles.role_name, users.date_created, users.last_login 
-                FROM users 
+                FROM users
                 INNER JOIN roles ON users.role_id = roles.role_id
-                ORDER BY users.last_name ASC, users.first_name ASC
-                WHERE users.user_id = $1::uuid;`,
+                WHERE users.user_id = $1::uuid`,
     [user_id],
     (error, results) => {
       if (error) {
         throw error;
       }
-      response.status(200).json(results.rows);
+      res.status(200).json(results.rows);
     }
   );
 };
