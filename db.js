@@ -88,9 +88,7 @@ const updateUser = (req, res) => {
           }
           console.log(results.rows);
 
-          return res
-            .status(201)
-            .json({ message: `successfully updated user });
+          return res.status(201).json({ message: `successfully updated user` });
         }
       );
     });
