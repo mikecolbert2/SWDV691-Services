@@ -42,7 +42,7 @@ app.delete("/api/user/:id", db.deleteUser);
 // get one user
 app.get("/api/user/:id", db.getUser);
 
-// get one user
+// update user
 app.put("/api/user/:id", db.updateUser);
 
 // ** ADMIN ** //
