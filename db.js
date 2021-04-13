@@ -2,7 +2,7 @@ const Pool = require("pg").Pool;
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-
+const cookie = require("cookie-parser");
 require("dotenv").config();
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -56,7 +56,8 @@ const login = async (req, res) => {
     { _id: user.user_id, role: user.role_name },
     process.env.TOKEN_SECRET
   );
-  res.header("auth-token", token);
+  //res.header("auth-token", token);
+  res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
 
   // need to incorporate this with the token - or at least not with the (user)
   if (user) {
