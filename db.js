@@ -1,6 +1,7 @@
 const Pool = require("pg").Pool;
 const bcrypt = require("bcrypt");
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 
@@ -20,12 +21,59 @@ const pool = new Pool({
 // email has already been registered
 
 // ** Accounts & Authentication ** //
+//user login
+const login = async (req, res) => {
+  const email = req.body.email;
+  user = [];
+  user = await new Promise((resolve, reject) => {
+    pool.query(
+      `SELECT users.user_id, users.first_name, users.last_name, users.email, users.password,
+      roles.role_name, users.date_created, users.last_login
+      FROM users
+      INNER JOIN roles ON users.role_id = roles.role_id
+      WHERE users.email = $1 `,
+      [email],
+      (error, results) => {
+        if (error) {
+          return reject(error);
+        }
+        //res.send(results.row[0]);
+        return resolve(results.rows[0]);
+      }
+    );
+  });
+
+  if (!user) {
+    return res.status(400).send("User not found.");
+  }
+
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!validPassword) {
+    return res.status(400).send("Password is incorrect.");
+  }
+
+  const token = jwt.sign(
+    { _id: user.user_id, role: user.role_name },
+    process.env.TOKEN_SECRET
+  );
+  res.header("auth-token", token);
+
+  // need to incorporate this with the token - or at least not with the (user)
+  if (user) {
+    console.log("success");
+    res.status(200).json(user);
+  }
+};
+
+// NEED A LOGOUT
+
+// CONNECT TO ANGULAR
 
 // delete a user
 const deleteUser = (req, res) => {
   console.log("inside delete user");
   const user_id = req.params.id;
-  let erorrs = [];
+  let errors = [];
   console.log("deleting user: " + user_id);
 
   pool.query(
@@ -141,4 +189,5 @@ module.exports = {
   deleteUser,
   getUser,
   updateUser,
+  login,
 };

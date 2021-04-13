@@ -30,8 +30,8 @@ app.get("/", (request, response) => {
 });
 
 // ** Users ** //
-// get one user
-//app.get("/api/user/:id", db.getOneUser);
+// login
+app.post("/api/login", db.login);
 
 // create new user
 app.post("/api/user", db.createUser);

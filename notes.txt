@@ -30,25 +30,4 @@ notes.txt
   } else {
     // validation passed, are no errors
 
-    // check to see if the email is already registered
-    //   pool
-    //     .query("SELECT * FROM users WHERE user_email = $1", [email])
-    //     .then((res) => console.log(res.rows[0].email))
-    //     .catch((err) => console.error("Error executing query", err.stack));
-    // }
-
-    // if (user.rows.length > 0) {
-    //   return res.status(401).json("User already exist!");
-    // }
-    // if yes ... return message to user
-
-    // if not ... continue ...
-    // const newUser = new User({
-    //   first_name,
-    //   last_name,
-    //   email,
-    //   password,
-    // });
-    // hash the password
-
-    
+   
