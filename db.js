@@ -52,20 +52,14 @@ const login = async (req, res) => {
     return res.status(400).send("Password is incorrect.");
   }
 
-  const token = new Promise((resolve, reject) => {
-    jwt.sign(
-      { _id: user.user_id, role: user.role_name },
-      process.env.TOKEN_SECRET
-    ),
-      (error, results) => {
-        if (error) {
-          return reject(error);
-        }
-
-        //res.header("auth-token", token);
-        res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
-      };
-  });
+  const token = jwt.sign(
+    { _id: user.user_id, role: user.role_name },
+    process.env.TOKEN_SECRET
+  );
+  {
+    res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
+    //res.header("auth-token", token);
+  }
 
   // need to incorporate this with the token - or at least not with the (user)
   if (user) {
