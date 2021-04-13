@@ -54,16 +54,16 @@ const login = async (req, res) => {
 
   const token = jwt.sign(
     { _id: user.user_id, role: user.role_name },
-    process.env.TOKEN_SECRET
+    process.env.TOKEN_SECRET,
+    {
+      expiresIn: 86400, //24}
+    }
   );
-  {
-    res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
-    //res.header("auth-token", token);
-  }
 
   // need to incorporate this with the token - or at least not with the (user)
   if (user) {
     console.log("success");
+    res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
     res.status(200).json(user);
   }
 };
