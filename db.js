@@ -56,8 +56,8 @@ const login = async (req, res) => {
     { _id: user.user_id, role: user.role_name },
     process.env.TOKEN_SECRET
   );
-  //res.header("auth-token", token);
-  res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
+  res.header("auth-token", token);
+  //res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
 
   // need to incorporate this with the token - or at least not with the (user)
   if (user) {
