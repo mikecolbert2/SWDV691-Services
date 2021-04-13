@@ -46,22 +46,19 @@ const login = async (req, res) => {
   if (!user) {
     return res.status(400).send("User not found.");
   }
-
   const validPassword = await bcrypt.compare(req.body.password, user.password);
   if (!validPassword) {
     return res.status(400).send("Password is incorrect.");
   }
-
-  const token = jwt.sign(
-    { _id: user.user_id, role: user.role_name },
-    process.env.TOKEN_SECRET,
-    {
-      expiresIn: 86400, //24}
-    }
-  );
-
   // need to incorporate this with the token - or at least not with the (user)
   if (user) {
+    const token = jwt.sign(
+      { _id: user.user_id, email: user.email, role: user.role_name },
+      process.env.TOKEN_SECRET,
+      {
+        expiresIn: 86400, //24 hours
+      }
+    );
     console.log("success");
     res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
     res.status(200).json(user);
