@@ -66,7 +66,6 @@ const login = async (req, res) => {
 };
 
 // NEED A LOGOUT
-
 // CONNECT TO ANGULAR
 
 // delete a user
@@ -118,30 +117,53 @@ const createUser = (req, res) => {
 
 // update a user
 const updateUser = (req, res) => {
-  const user_id = req.params.id;
-  let { first_name, last_name, email, password, password2 } = req.body;
+  let { user_id, first_name, last_name, email } = req.body;
   console.log(user_id);
-  console.log({ first_name, last_name, email, password, password2 });
 
-  bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(password, salt, (err, hashed_pwd) => {
-      if (err) throw err;
+  pool.query(
+    `UPDATE users SET first_name = $1, last_name = $2, email = $3 WHERE user_id = $4 RETURNING *`,
+    [first_name, last_name, email, user_id],
+    (err, results) => {
+      if (err) {
+        throw err;
+      }
+      console.log(results.rows[0]);
+      console.log("***********");
+      //console.log(results[0].rows);
+      //const user = JSON.stringify(results.rows);
 
-      pool.query(
-        `UPDATE users SET first_name = $1, last_name = $2, email = $3, password = $4 WHERE user_id = $5 RETURNING *`,
-        [first_name, last_name, email, hashed_pwd, user_id],
-        (err, results) => {
-          if (err) {
-            throw err;
-          }
-          console.log(results.rows);
-
-          return res.status(201).json({ message: `successfully updated user` });
-        }
-      );
-    });
-  });
+      //return res.status(201).json(JSON.stringify(results.rows));
+      return res.status(201).json(results.rows[0]);
+    }
+  );
 };
+
+// // update a user
+// const updateUser = (req, res) => {
+//   const user_id = req.params.id;
+//   let { first_name, last_name, email, password, password2 } = req.body;
+//   console.log(user_id);
+//   console.log({ first_name, last_name, email, password, password2 });
+
+//   bcrypt.genSalt(10, (err, salt) => {
+//     bcrypt.hash(password, salt, (err, hashed_pwd) => {
+//       if (err) throw err;
+
+//       pool.query(
+//         `UPDATE users SET first_name = $1, last_name = $2, email = $3, password = $4 WHERE user_id = $5 RETURNING *`,
+//         [first_name, last_name, email, hashed_pwd, user_id],
+//         (err, results) => {
+//           if (err) {
+//             throw err;
+//           }
+//           console.log(results.rows);
+
+//           return res.status(201).json({ message: `successfully updated user` });
+//         }
+//       );
+//     });
+//   });
+// };
 
 // ** Admin ** //
 

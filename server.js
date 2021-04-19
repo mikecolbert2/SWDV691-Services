@@ -43,7 +43,8 @@ app.delete("/api/user/:id", db.deleteUser);
 app.get("/api/user/:id", db.getUser);
 
 // update user
-app.put("/api/user/:id", db.updateUser);
+//app.put("/api/user/:id", db.updateUser);
+app.put("/api/user", db.updateUser);
 
 // ** ADMIN ** //
 // get all users
