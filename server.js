@@ -6,23 +6,50 @@ const methodOverride = require("method-override");
 const cors = require("cors");
 
 const db = require("./db");
+const cookieParser = require("cookie-parser");
 
 app.use(bodyParser.urlencoded({ extended: "true" }));
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 app.use(methodOverride());
-app.use(cors());
 
-//CORS configuration
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET, DELETE, POST, PUT");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+// Add a list of allowed origins.
+// If you have more origins you would like to add, you can add them to the array below.
+const allowedOrigins = ["http://localhost:4200"];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: "DELETE, GET, POST, PUT",
+    credentials: true,
+  })
+);
+
+// //CORS configuration
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+//   res.header("Access-Control-Allow-Methods", "DELETE, GET, POST, PUT");
+//   res.header("Access-Control-Allow-Credentials", true);
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+
+//   next();
+// });
+
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
+// //CORS configuration
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Methods", "GET, DELETE, POST, PUT");
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "Origin, X-Requested-With, Content-Type, Accept"
+//   );
+//   next();
+// });
 
 // root route
 app.get("/", (request, response) => {
@@ -53,6 +80,20 @@ app.get("/api/admin/users", db.getAllUsers);
 // ** TEST **
 // Get all
 // app.get("/api/items", db.getAllItems);
+
+// ** TASKS ** //
+
+// get all tasks
+app.get("/api/tasks", db.getAllTasks);
+
+// get all tasks belonging to a user
+app.get("/api/user/tasks/:id", db.getTasksForUser);
+
+// create new task
+app.post("/api/user/task", db.createTask);
+
+// delete existing task
+app.delete("/api/user/task/:id", db.deleteTask);
 
 // Start app and listen on port 8080
 const PORT = process.env.PORT || 5000;

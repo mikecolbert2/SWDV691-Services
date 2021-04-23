@@ -2,7 +2,7 @@ const Pool = require("pg").Pool;
 const bcrypt = require("bcrypt");
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
-const cookie = require("cookie-parser");
+//const cookie = require("cookie-parser");
 require("dotenv").config();
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -52,16 +52,32 @@ const login = async (req, res) => {
   }
   // need to incorporate this with the token - or at least not with the (user)
   if (user) {
-    const token = jwt.sign(
-      { _id: user.user_id, email: user.email, role: user.role_name },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: 86400, //24 hours
-      }
-    );
-    console.log("success");
-    res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
-    res.status(200).json(user);
+    // const token = jwt.sign(
+    //   { _id: user.user_id, email: user.email, role: user.role_name },
+    //   process.env.JWT_SECRET,
+    //   {
+    //     expiresIn: "4h", //4 hours
+    //   }
+    // );
+    console.log("successful login");
+    //res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
+    // res.status(200).json({
+    //   jwt_token: token,
+    //   expiresIn: "4h",
+    // });
+    //setting the 'set-cookie' header
+    res.cookie("user_id", user.user_id, {
+      httpOnly: true,
+      //secure: true,  //https only, uncomment when in production
+      signed: true,
+    });
+    res.json({
+      current_user: user,
+      // user_id: user.user_id,
+      // user_email: user.email,
+      // user_role: user.role_name,
+      message: "logged in",
+    });
   }
 };
 
@@ -154,10 +170,26 @@ const getAllUsers = (req, res) => {
   );
 };
 
+// return a list of all tasks
+const getAllTasks = (req, res) => {
+  console.log("inside get all tasks");
+  pool.query(
+    `SELECT tasks.task_id, tasks.task_name, tasks.user_id, tasks.date_created
+                FROM tasks;`,
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      res.status(200).json(results.rows);
+    }
+  );
+};
+
 // return one user
 const getUser = (req, res) => {
   const user_id = req.params.id;
   console.log(user_id);
+  let errors = [];
   pool.query(
     `SELECT users.user_id, users.first_name, users.last_name, users.email, users.password, 
                 roles.role_name, users.date_created, users.last_login 
@@ -174,6 +206,70 @@ const getUser = (req, res) => {
   );
 };
 
+// tasks
+// task_id: uuid
+// task_name
+// user_id
+// date_created
+
+// return your tasks
+const getTasksForUser = (req, res) => {
+  const user_id = req.params.id;
+  console.log(user_id);
+  pool.query(
+    `SELECT tasks.task_id, tasks.task_name, tasks.user_id, tasks.date_created
+    FROM tasks WHERE tasks.user_id = $1;`,
+    [user_id],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      res.status(200).json(results.rows);
+    }
+  );
+};
+
+// create a new task
+const createTask = (req, res) => {
+  let { task_name, user_id } = req.body;
+  let errors = [];
+
+  console.log({ task_name, user_id });
+  pool.query(
+    `INSERT INTO tasks (task_name, user_id, date_created) VALUES ($1, $2::uuid, current_timestamp) RETURNING *`,
+    [task_name, user_id],
+    (err, results) => {
+      if (err) {
+        throw err;
+      }
+      console.log(results.rows);
+      //res.status(201).json(results.rows);
+      res
+        .status(201)
+        .json({ message: `task added successfully ${results.rows[0]}` });
+    }
+  );
+};
+
+// delete a task
+const deleteTask = (req, res) => {
+  console.log("inside delete task");
+  const task_id = req.params.id;
+  let errors = [];
+  console.log("deleting task: " + task_id);
+
+  pool.query(
+    `DELETE FROM tasks WHERE tasks.task_id = $1::uuid`,
+    [task_id],
+    (err, results) => {
+      if (err) {
+        throw err;
+      }
+      res.status(201).json({ message: `successfully deleted task` });
+    }
+  );
+};
+
 module.exports = {
   //  getAllItems,
   getAllUsers,
@@ -182,4 +278,8 @@ module.exports = {
   getUser,
   updateUser,
   login,
+  createTask,
+  getAllTasks,
+  getTasksForUser,
+  deleteTask,
 };
