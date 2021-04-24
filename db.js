@@ -1,8 +1,5 @@
 const Pool = require("pg").Pool;
 const bcrypt = require("bcrypt");
-const passport = require("passport");
-const jwt = require("jsonwebtoken");
-//const cookie = require("cookie-parser");
 require("dotenv").config();
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -37,7 +34,6 @@ const login = async (req, res) => {
         if (error) {
           return reject(error);
         }
-        //res.send(results.row[0]);
         return resolve(results.rows[0]);
       }
     );
@@ -50,39 +46,19 @@ const login = async (req, res) => {
   if (!validPassword) {
     return res.status(400).send("Password is incorrect.");
   }
-  // need to incorporate this with the token - or at least not with the (user)
   if (user) {
-    // const token = jwt.sign(
-    //   { _id: user.user_id, email: user.email, role: user.role_name },
-    //   process.env.JWT_SECRET,
-    //   {
-    //     expiresIn: "4h", //4 hours
-    //   }
-    // );
     console.log("successful login");
-    //res.cookie("SESSIONID", token, { httpOnly: true, secure: true });
-    // res.status(200).json({
-    //   jwt_token: token,
-    //   expiresIn: "4h",
+    // res.cookie("user_id", user.user_id, {
+    //   httpOnly: true,
+    //   secure: true, //https only, uncomment when in production
+    //   signed: true,
     // });
-    //setting the 'set-cookie' header
-    res.cookie("user_id", user.user_id, {
-      httpOnly: true,
-      //secure: true,  //https only, uncomment when in production
-      signed: true,
-    });
     res.json({
       current_user: user,
-      // user_id: user.user_id,
-      // user_email: user.email,
-      // user_role: user.role_name,
       message: "logged in",
     });
   }
 };
-
-// NEED A LOGOUT
-// CONNECT TO ANGULAR
 
 // delete a user
 const deleteUser = (req, res) => {
@@ -98,7 +74,6 @@ const deleteUser = (req, res) => {
       if (err) {
         throw err;
       }
-      //console.log(results.rows);
       res.status(201).json({ message: `successfully deleted user` });
     }
   );
@@ -121,7 +96,6 @@ const createUser = (req, res) => {
             throw err;
           }
           console.log(results.rows);
-          //res.status(201).json(results.rows);
           res
             .status(201)
             .json({ message: `successfully registered ${results.rows}` });
@@ -206,12 +180,6 @@ const getUser = (req, res) => {
   );
 };
 
-// tasks
-// task_id: uuid
-// task_name
-// user_id
-// date_created
-
 // return your tasks
 const getTasksForUser = (req, res) => {
   const user_id = req.params.id;
@@ -244,11 +212,7 @@ const createTask = (req, res) => {
         throw err;
       }
       console.log(results.rows);
-      //res.status(201).json(results.rows);
-      res
-        .status(201)
-        //.json({ message: `task added successfully,`, task: results.rows[0] });
-        .json(results.rows[0]);
+      res.status(201).json(results.rows[0]);
     }
   );
 };

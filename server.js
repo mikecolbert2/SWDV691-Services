@@ -6,19 +6,19 @@ const methodOverride = require("method-override");
 const cors = require("cors");
 
 const db = require("./db");
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
 
 app.use(bodyParser.urlencoded({ extended: "true" }));
 app.use(bodyParser.json());
 app.use(bodyParser.json({ type: "application/vnd.api+json" }));
 app.use(methodOverride());
 
+// CORS configuration
 // Add a list of allowed origins.
 // If you have more origins you would like to add, you can add them to the array below.
-const allowedOrigins = [
-  "http://localhost:4200",
-  "https://swdv691-services.herokuapp.com/",
-];
+// "http://localhost:4200"
+
+const allowedOrigins = ["*"];
 
 app.use(
   cors({
@@ -28,31 +28,7 @@ app.use(
   })
 );
 
-// //CORS configuration
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-//   res.header("Access-Control-Allow-Methods", "DELETE, GET, POST, PUT");
-//   res.header("Access-Control-Allow-Credentials", true);
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-
-//   next();
-// });
-
-app.use(cookieParser(process.env.COOKIE_SECRET));
-
-// //CORS configuration
-// app.use(function (req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Methods", "GET, DELETE, POST, PUT");
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "Origin, X-Requested-With, Content-Type, Accept"
-//   );
-//   next();
-// });
+// app.use(cookieParser(process.env.COOKIE_SECRET));
 
 // root route
 app.get("/", (request, response) => {
