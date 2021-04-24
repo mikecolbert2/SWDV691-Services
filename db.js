@@ -218,12 +218,13 @@ const getTasksForUser = (req, res) => {
   console.log(user_id);
   pool.query(
     `SELECT tasks.task_id, tasks.task_name, tasks.user_id, tasks.date_created
-    FROM tasks WHERE tasks.user_id = $1;`,
+    FROM tasks WHERE tasks.user_id = $1::uuid;`,
     [user_id],
     (error, results) => {
       if (error) {
         throw error;
       }
+      console.log(results.rows);
       res.status(200).json(results.rows);
     }
   );
@@ -246,7 +247,8 @@ const createTask = (req, res) => {
       //res.status(201).json(results.rows);
       res
         .status(201)
-        .json({ message: `task added successfully ${results.rows[0]}` });
+        //.json({ message: `task added successfully,`, task: results.rows[0] });
+        .json(results.rows[0]);
     }
   );
 };
