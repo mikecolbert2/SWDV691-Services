@@ -189,3 +189,9 @@ total_time
 
 
 
+`SELECT task_log.log_id, tasks.task_name, task_log.start_time, task_log.end_time, task_log.total_time
+    FROM task_log
+    INNER JOIN tasks ON task_log.task_id = tasks.task_id
+    INNER JOIN users ON tasks.user_id = users.user_id;
+    WHERE tasks.user_id = $1::uuid`,
+    [user_id],

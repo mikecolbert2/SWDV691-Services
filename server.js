@@ -91,6 +91,9 @@ app.post("/api/user/timer", db.startTimer);
 // stop and update existing timer
 app.put("/api/user/timer/:id", db.stopTimer);
 
+// get task logs for user
+app.get("/api/user/tasks-log/:id", db.getTaskLogsByUser);
+
 // Start app and listen on port 8080
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`Server started on port ${PORT}`));

@@ -283,6 +283,28 @@ const stopTimer = (req, res) => {
   );
 };
 
+// return your tasks log
+const getTaskLogsByUser = (req, res) => {
+  console.log("inside get task logs by user");
+  const user_id = req.params.id;
+  console.log(user_id);
+  pool.query(
+    `SELECT task_log.log_id, tasks.task_name, task_log.start_time, task_log.end_time, task_log.total_time, users.user_id
+    FROM task_log
+    INNER JOIN tasks ON task_log.task_id = tasks.task_id
+    INNER JOIN users ON tasks.user_id = users.user_id
+    WHERE tasks.user_id = $1::uuid`,
+    [user_id],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      console.log(results.rows);
+      res.status(200).json(results.rows);
+    }
+  );
+};
+
 module.exports = {
   //  getAllItems,
   getAllUsers,
@@ -297,4 +319,5 @@ module.exports = {
   deleteTask,
   startTimer,
   stopTimer,
+  getTaskLogsByUser,
 };
