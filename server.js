@@ -85,6 +85,12 @@ app.post("/api/user/task", db.createTask);
 // delete existing task
 app.delete("/api/user/task/:id", db.deleteTask);
 
+// create & start new timer
+app.post("/api/user/timer", db.startTimer);
+
+// stop and update existing timer
+app.put("/api/user/timer/:id", db.stopTimer);
+
 // Start app and listen on port 8080
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`Server started on port ${PORT}`));

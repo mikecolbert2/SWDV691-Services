@@ -119,8 +119,14 @@ UPDATE task_log
 SET end_time = current_timestamp, total_time = (end_time::TIME - start_time::TIME)
 WHERE log_id = '451218c3-4bfd-4817-bf29-17f8050dc9f5';
 
-
 SELECT * FROM task_log;
+
+
+SELECT SUM (total_time) AS total
+FROM task_log
+//WHERE task_id = 'xx'
+
+
 
 
 // test on delete if I delete a task - it should delete task_log entries associated with that task.
@@ -137,6 +143,33 @@ INNER JOIN users ON tasks.user_id = users.user_id;
 
 
 
+SELECT users.email, tasks.task_name
+FROM tasks
+INNER JOIN users ON tasks.user_id = users.user_id;
+
+
+
+
+
+
+
+
+
+
+
+
+
+CREATE FUNCTION last_upd_trig() RETURNS trigger
+   LANGUAGE plpgsql AS
+$$BEGIN
+   NEW.end_time := current_timestamp;
+   RETURN NEW;
+END;$$;
+
+CREATE TRIGGER last_upd_trigger
+   BEFORE UPDATE ON task_log    //optionally BEFORE INSERT OR UPDATE
+   FOR EACH ROW
+   EXECUTE PROCEDURE last_upd_trig();
 
 
 

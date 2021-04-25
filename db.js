@@ -236,6 +236,53 @@ const deleteTask = (req, res) => {
   );
 };
 
+// create a new timer
+const startTimer = (req, res) => {
+  console.log("inside create timer");
+  let { task_id } = req.body;
+  let errors = [];
+  console.log("starting timer for task_id - " + task_id);
+
+  pool.query(
+    `INSERT INTO task_log (task_id, start_time, active) VALUES ($1::uuid, current_timestamp, true) RETURNING *`,
+    [task_id],
+    (err, results) => {
+      if (err) {
+        throw err;
+      }
+      console.log(results.rows);
+      res.status(201).json(results.rows[0]);
+    }
+  );
+
+  // task_log
+  // log_id : uuid
+  // task_id
+  // start_time
+  // end_time
+  // total_time
+};
+
+const stopTimer = (req, res) => {
+  console.log("inside timer services - stop timer");
+  let { log_id } = req.body;
+  console.log("log_id: " + log_id);
+  let errors = [];
+  console.log("stopping timer for - " + log_id);
+
+  pool.query(
+    `UPDATE task_log SET active = $1 WHERE log_id = $2::uuid RETURNING *`,
+    [false, log_id],
+    (err, results) => {
+      if (err) {
+        throw err;
+      }
+      console.log(results.rows[0]);
+      res.status(201).json(results.rows[0]);
+    }
+  );
+};
+
 module.exports = {
   //  getAllItems,
   getAllUsers,
@@ -248,4 +295,6 @@ module.exports = {
   getAllTasks,
   getTasksForUser,
   deleteTask,
+  startTimer,
+  stopTimer,
 };
