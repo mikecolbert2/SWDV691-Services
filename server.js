@@ -18,15 +18,26 @@ app.use(methodOverride());
 // If you have more origins you would like to add, you can add them to the array below.
 // "http://localhost:4200"
 
-const allowedOrigins = ["*"];
+// const allowedOrigins = ["*"];
 
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: "DELETE, GET, POST, PUT",
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: allowedOrigins,
+//     methods: "DELETE, GET, POST, PUT",
+//     credentials: true,
+//   })
+// );
+
+//CORS configuration
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, DELETE, POST, PUT");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 
 // app.use(cookieParser(process.env.COOKIE_SECRET));
 
