@@ -293,7 +293,8 @@ const getTaskLogsByUser = (req, res) => {
     FROM task_log
     INNER JOIN tasks ON task_log.task_id = tasks.task_id
     INNER JOIN users ON tasks.user_id = users.user_id
-    WHERE tasks.user_id = $1::uuid`,
+    WHERE tasks.user_id = $1::uuid
+    ORDER BY task_log.end_time DESC`,
     [user_id],
     (error, results) => {
       if (error) {
