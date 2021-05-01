@@ -94,6 +94,9 @@ app.put("/api/user/timer/:id", db.stopTimer);
 // get task logs for user
 app.get("/api/user/tasks-log/:id", db.getTaskLogsByUser);
 
+// delete a single task log entry
+app.delete("/api/user/tasks-log/:id", db.deleteTaskLogEntry);
+
 // Start app and listen on port 8080
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, console.log(`Server started on port ${PORT}`));

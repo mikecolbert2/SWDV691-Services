@@ -305,6 +305,25 @@ const getTaskLogsByUser = (req, res) => {
   );
 };
 
+// delete a single task log entry
+const deleteTaskLogEntry = (req, res) => {
+  console.log("inside delete task log entry");
+  const log_id = req.params.id;
+  let errors = [];
+  console.log("deleting task log entry: " + log_id);
+
+  pool.query(
+    `DELETE FROM task_log WHERE task_log.log_id = $1::uuid`,
+    [log_id],
+    (err, results) => {
+      if (err) {
+        throw err;
+      }
+      res.status(201).json({ message: `successfully deleted log entry` });
+    }
+  );
+};
+
 module.exports = {
   //  getAllItems,
   getAllUsers,
@@ -320,4 +339,5 @@ module.exports = {
   startTimer,
   stopTimer,
   getTaskLogsByUser,
+  deleteTaskLogEntry,
 };
